@@ -143,9 +143,9 @@ export function Sidebar({ currentTab, onTabChange }: SidebarProps) {
               "mb-2 text-xs text-muted-foreground/60 text-center select-none",
               isCollapsed ? "px-0" : "px-1"
             )}
-            title={`Hindsight API v${apiVersion}`}
+            title={`Buddhi API v${apiVersion}`}
           >
-            {isCollapsed ? `v${apiVersion}` : `Hindsight v${apiVersion}`}
+            {isCollapsed ? `v${apiVersion}` : `Buddhi v${apiVersion}`}
           </div>
         )}
         <button

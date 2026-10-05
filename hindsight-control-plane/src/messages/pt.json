@@ -596,7 +596,7 @@
     "memoryDefenseSecretLeakTitle": "Prevenção de vazamento de segredos",
     "memoryDefenseSecretLeakDescription": "Verifica o conteúdo retido em busca de segredos. 45 padrões cobrindo chaves comuns de provedores, AWS e informações pessoais.",
     "memoryDefenseEnterpriseTitle": "Memory Defense Enterprise",
-    "memoryDefenseEnterpriseSubtitle": "Detecte mais, edite com mais inteligência e audite tudo: disponível no Hindsight Cloud.",
+    "memoryDefenseEnterpriseSubtitle": "Detecte mais, edite com mais inteligência e audite tudo: disponível no Buddhi Cloud.",
     "memoryDefenseEnterpriseFeatureDetectSecrets": "Detecção avançada de segredos: mais de 200 padrões cobrindo chaves de provedores, AWS, GitHub e tokens de CI",
     "memoryDefenseEnterpriseFeatureBase64": "Decodificação Base64: detecta segredos ocultos em cargas codificadas",
     "memoryDefenseEnterpriseFeatureLlm": "Triagem por LLM: detecta padrões novos de exfiltração que regex não consegue",
@@ -762,6 +762,9 @@
     "pendingConsolidation": "{count} memórias pendentes de consolidação",
     "constellation": "Constelação",
     "table": "Tabela",
+    "calendar": "Calendario",
+    "calendarSelectDay": "Selecione um dia para ver as suas memórias",
+    "today": "Hoje",
     "timeline": "Linha do Tempo",
     "hidePanel": "Ocultar painel",
     "showPanel": "Mostrar painel",
@@ -938,6 +941,7 @@
   "entitiesView": {
     "viewRelations": "Relações",
     "viewList": "Lista",
+    "viewCards": "Cartões",
     "loadingEntityGraph": "Carregando grafo de entidades...",
     "noCooccurrences": "Nenhuma co-ocorrência de entidades ainda",
     "noCooccurrencesDescription": "Duas entidades co-ocorrem quando aparecem na mesma memória.",
@@ -1811,8 +1815,8 @@
     "resumeMotionLabel": "Retomar"
   },
   "metadata": {
-    "title": "Hindsight Cloud",
-    "description": "Plano de controle multi-inquilino para a memória semântica Hindsight"
+    "title": "Buddhi Cloud",
+    "description": "Plano de controle multi-inquilino para a memória semântica Buddhi"
   },
   "addDocument": {
     "addDocumentButton": "Adicionar Documento",
@@ -1903,7 +1907,7 @@
   "banksOverview": {
     "title": "Bancos de memória",
     "subtitle": "Cada banco de memória é um cérebro separado — um armazenamento isolado de tudo o que um usuário, agente ou projeto lembra. Nada é compartilhado entre bancos.",
-    "welcomeTitle": "Bem-vindo ao Hindsight",
+    "welcomeTitle": "Bem-vindo ao Buddhi",
     "welcomeBody": "Um banco de memória é um cérebro separado — um armazenamento isolado de tudo o que um usuário, agente ou projeto lembra. Crie o primeiro para começar.",
     "search": "Pesquisar bancos...",
     "noSearchResults": "Nenhum banco corresponde à sua pesquisa.",
@@ -1931,7 +1935,7 @@
     "bulkDeleteFailures": "Não foi possível excluir estes bancos:"
   },
   "login": {
-    "title": "Plano de Controle Hindsight",
+    "title": "Plano de Controle Buddhi",
     "description": "Insira sua chave de acesso para continuar",
     "accessKey": "Chave de acesso",
     "accessKeyPlaceholder": "Inserir chave de acesso",

@@ -30,6 +30,9 @@ venv/
 desktop.ini
 opencode.md
 
+# Locally captured screenshots (AI-annotated, not source)
+ss-taken-by-ai/
+
 # Node
 node_modules/
 # Without this, the pattern above matches directories only — a node_modules SYMLINK (what you get

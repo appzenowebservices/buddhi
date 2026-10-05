@@ -596,7 +596,7 @@
     "memoryDefenseSecretLeakTitle": "Prévention des fuites de secrets",
     "memoryDefenseSecretLeakDescription": "Analyse le contenu retenu à la recherche de secrets. 45 motifs couvrant les clés de fournisseurs courants, AWS et les informations personnelles.",
     "memoryDefenseEnterpriseTitle": "Memory Defense Enterprise",
-    "memoryDefenseEnterpriseSubtitle": "Détectez davantage, expurgez plus intelligemment et auditez tout — disponible dans Hindsight Cloud.",
+    "memoryDefenseEnterpriseSubtitle": "Détectez davantage, expurgez plus intelligemment et auditez tout — disponible dans Buddhi Cloud.",
     "memoryDefenseEnterpriseFeatureDetectSecrets": "Détection avancée de secrets : plus de 200 motifs couvrant les clés de fournisseurs, AWS, GitHub et tokens CI",
     "memoryDefenseEnterpriseFeatureBase64": "Décodage Base64 : détecte les secrets cachés dans les charges encodées",
     "memoryDefenseEnterpriseFeatureLlm": "Analyse par LLM : détecte les nouveaux motifs d'exfiltration que les regex ne peuvent pas",
@@ -762,6 +762,9 @@
     "pendingConsolidation": "{count} souvenirs en attente de consolidation",
     "constellation": "Constellation",
     "table": "Tableau",
+    "calendar": "Calendrier",
+    "calendarSelectDay": "Sélectionnez un jour pour voir ses souvenirs",
+    "today": "Aujourd'hui",
     "timeline": "Chronologie",
     "hidePanel": "Masquer le panneau",
     "showPanel": "Afficher le panneau",
@@ -938,6 +941,7 @@
   "entitiesView": {
     "viewRelations": "Relations",
     "viewList": "Liste",
+    "viewCards": "Cartes",
     "loadingEntityGraph": "Chargement du graphe d'entités...",
     "noCooccurrences": "Aucune co-occurrence d'entités pour l'instant",
     "noCooccurrencesDescription": "Deux entités co-occurrent quand elles apparaissent dans le même souvenir.",
@@ -1811,8 +1815,8 @@
     "resumeMotionLabel": "Reprendre"
   },
   "metadata": {
-    "title": "Hindsight Cloud",
-    "description": "Plan de contrôle multi-locataire pour la mémoire sémantique Hindsight"
+    "title": "Buddhi Cloud",
+    "description": "Plan de contrôle multi-locataire pour la mémoire sémantique Buddhi"
   },
   "addDocument": {
     "addDocumentButton": "Ajouter un document",
@@ -1903,7 +1907,7 @@
   "banksOverview": {
     "title": "Banques mémoire",
     "subtitle": "Chaque banque mémoire est un cerveau distinct : un stockage isolé de tout ce dont se souvient un utilisateur, un agent ou un projet. Rien n'est partagé entre les banques.",
-    "welcomeTitle": "Bienvenue dans Hindsight",
+    "welcomeTitle": "Bienvenue dans Buddhi",
     "welcomeBody": "Une banque mémoire est un cerveau distinct : un stockage isolé de tout ce dont se souvient un utilisateur, un agent ou un projet. Créez la première pour commencer.",
     "search": "Rechercher des banques...",
     "noSearchResults": "Aucune banque ne correspond à votre recherche.",
@@ -1931,7 +1935,7 @@
     "bulkDeleteFailures": "Ces banques n'ont pas pu être supprimées :"
   },
   "login": {
-    "title": "Plan de contrôle Hindsight",
+    "title": "Plan de contrôle Buddhi",
     "description": "Entrez votre clé d'accès pour continuer",
     "accessKey": "Clé d'accès",
     "accessKeyPlaceholder": "Entrez la clé d'accès",

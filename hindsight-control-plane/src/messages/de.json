@@ -596,7 +596,7 @@
     "memoryDefenseSecretLeakTitle": "Geheimnislecks verhindern",
     "memoryDefenseSecretLeakDescription": "Gespeicherte Inhalte auf Geheimnisse prüfen. 45 Muster für gängige Anbieter-Schlüssel, AWS und persönliche Daten.",
     "memoryDefenseEnterpriseTitle": "Memory Defense Enterprise",
-    "memoryDefenseEnterpriseSubtitle": "Mehr erkennen, intelligenter redigieren, alles auditieren — verfügbar in Hindsight Cloud.",
+    "memoryDefenseEnterpriseSubtitle": "Mehr erkennen, intelligenter redigieren, alles auditieren — verfügbar in Buddhi Cloud.",
     "memoryDefenseEnterpriseFeatureDetectSecrets": "Erweiterte Geheimnis-Erkennung: 200+ Muster für Anbieter-Schlüssel, AWS, GitHub und CI-Token",
     "memoryDefenseEnterpriseFeatureBase64": "Base64-Decodierung: erkennt Geheimnisse in codierten Nutzlasten",
     "memoryDefenseEnterpriseFeatureLlm": "LLM-Screening: erkennt neuartige Exfiltrationsmuster, die Regex nicht erfasst",
@@ -762,6 +762,9 @@
     "pendingConsolidation": "{count} Erinnerungen stehen zur Konsolidierung aus",
     "constellation": "Konstellation",
     "table": "Tabelle",
+    "calendar": "Kalender",
+    "calendarSelectDay": "Wähle einen Tag, um seine Erinnerungen zu sehen",
+    "today": "Heute",
     "timeline": "Zeitleiste",
     "hidePanel": "Bereich ausblenden",
     "showPanel": "Bereich einblenden",
@@ -938,6 +941,7 @@
   "entitiesView": {
     "viewRelations": "Beziehungen",
     "viewList": "Liste",
+    "viewCards": "Karten",
     "loadingEntityGraph": "Entitätsgraph wird geladen...",
     "noCooccurrences": "Noch keine gemeinsamen Entitäten",
     "noCooccurrencesDescription": "Zwei Entitäten treten gemeinsam auf, wenn sie in derselben Erinnerung erscheinen.",
@@ -1811,8 +1815,8 @@
     "resumeMotionLabel": "Start"
   },
   "metadata": {
-    "title": "Hindsight Cloud",
-    "description": "Mehrmandanten-Steuerungsebene für Hindsight semantischen Speicher"
+    "title": "Buddhi Cloud",
+    "description": "Mehrmandanten-Steuerungsebene für Buddhi semantischen Speicher"
   },
   "addDocument": {
     "addDocumentButton": "Dokument hinzufügen",
@@ -1903,7 +1907,7 @@
   "banksOverview": {
     "title": "Speicherbänke",
     "subtitle": "Jede Speicherbank ist ein eigenes Gehirn — ein isolierter Speicher für alles, woran sich ein Benutzer, Agent oder Projekt erinnert. Zwischen Bänken wird nichts geteilt.",
-    "welcomeTitle": "Willkommen bei Hindsight",
+    "welcomeTitle": "Willkommen bei Buddhi",
     "welcomeBody": "Eine Speicherbank ist ein eigenes Gehirn — ein isolierter Speicher für alles, woran sich ein Benutzer, Agent oder Projekt erinnert. Erstellen Sie Ihre erste, um loszulegen.",
     "search": "Bänke suchen...",
     "noSearchResults": "Keine Bänke entsprechen Ihrer Suche.",
@@ -1931,7 +1935,7 @@
     "bulkDeleteFailures": "Diese Bänke konnten nicht gelöscht werden:"
   },
   "login": {
-    "title": "Hindsight Control Plane",
+    "title": "Buddhi Control Plane",
     "description": "Geben Sie Ihren Zugangsschlüssel ein, um fortzufahren",
     "accessKey": "Zugangsschlüssel",
     "accessKeyPlaceholder": "Zugangsschlüssel eingeben",

@@ -18,7 +18,6 @@ import {
   type ComposerBlock,
 } from "@/components/content-composer";
 
-import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -44,7 +43,6 @@ import {
   FileText,
   Moon,
   Sun,
-  Github,
   Upload,
   X,
   Lock,
@@ -556,13 +554,9 @@ function BankSelectorInner() {
   };
 
   return (
-    <div className="bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient">
-      <div className="flex items-center gap-4 text-sm">
-        {/* Logo, split so only the mark spins on navigation while the wordmark
-            stays put. The mark is the standalone favicon.png (so it can rotate
-            freely); the wordmark is the right slice of the full lockup (logo.png)
-            shown via a cropped background. Their widths sum to the full logo, so
-            the two pieces butt together seamlessly at h-10. */}
+    <div className="bg-card text-card-foreground px-3 py-3 border-b-4 border-primary-gradient sm:px-5">
+      <div className="flex items-center gap-2 text-sm sm:gap-4">
+        {/* Logo — the Buddhi mark, which spins in place on navigation. */}
         {/* The logo is the way back to the banks overview, as it is in most apps. */}
         <button
           type="button"
@@ -572,24 +566,15 @@ function BankSelectorInner() {
           onClick={() => router.push("/dashboard")}
         >
           <img
-            src={withBasePath("/favicon.png")}
-            alt=""
-            className={cn("h-10 w-auto", logoSpinning && "animate-logo-wiggle")}
+            src={withBasePath("/logo.png")}
+            alt="Buddhi"
+            className={cn("h-10 w-10", logoSpinning && "animate-logo-wiggle")}
             onAnimationEnd={() => setLogoSpinning(false)}
-          />
-          <div
-            className="h-10 w-[99px]"
-            style={{
-              backgroundImage: `url(${withBasePath("/logo.png")})`,
-              backgroundSize: "auto 100%",
-              backgroundPosition: "right center",
-              backgroundRepeat: "no-repeat",
-            }}
           />
         </button>
 
         {/* Separator */}
-        <div className="h-8 w-px bg-border" />
+        <div className="hidden h-8 w-px bg-border sm:block" />
 
         {/* Memory Bank Selector */}
         <Popover
@@ -609,7 +594,7 @@ function BankSelectorInner() {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-[250px] justify-between font-bold border-2 border-primary hover:bg-accent"
+              className="min-w-0 flex-1 justify-between font-bold border-2 border-primary hover:bg-accent sm:w-[250px] sm:flex-none"
             >
               <span className="truncate">
                 {currentBankName || currentBank || tNavBank("select")}
@@ -617,7 +602,7 @@ function BankSelectorInner() {
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[420px] p-0" align="start">
+          <PopoverContent className="w-[calc(100vw-2rem)] p-0 sm:w-[420px]" align="start">
             {/* shouldFilter={false}: matching is done by the server so search reaches
                 banks that haven't been paged in yet. */}
             <Command shouldFilter={false}>
@@ -812,27 +797,12 @@ function BankSelectorInner() {
             data-add-document
           >
             <Plus className="h-4 w-4" />
-            <span>{tAddDocument("addDocumentButton")}</span>
+            <span className="hidden sm:inline">{tAddDocument("addDocumentButton")}</span>
           </Button>
         )}
 
         {/* Spacer */}
         <div className="flex-1" />
-
-        {/* GitHub Link */}
-        <a
-          href="https://github.com/vectorize-io/hindsight"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
-          title={tNav("viewOnGitHub")}
-        >
-          <Github className="h-5 w-5" />
-          <span className="text-sm font-medium">GitHub</span>
-        </a>
-
-        {/* Separator */}
-        <div className="h-8 w-px bg-border" />
 
         {/* Dark Mode Toggle */}
         <Button
@@ -844,8 +814,6 @@ function BankSelectorInner() {
         >
           {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
         </Button>
-
-        <LanguageSwitcher />
 
         {features?.access_key_auth && (
           <>
@@ -1578,36 +1546,26 @@ export function BankSelector() {
   return (
     <Suspense
       fallback={
-        <div className="bg-card text-card-foreground px-5 py-3 border-b-4 border-primary-gradient">
-          <div className="flex items-center gap-4 text-sm">
+        <div className="bg-card text-card-foreground px-3 py-3 border-b-4 border-primary-gradient sm:px-5">
+          <div className="flex items-center gap-2 text-sm sm:gap-4">
             <Image
               src={withBasePath("/logo.png")}
-              alt="Hindsight"
+              alt="Buddhi"
               width={40}
               height={40}
               className="h-10 w-auto"
               unoptimized
             />
-            <div className="h-8 w-px bg-border" />
+            <div className="hidden h-8 w-px bg-border sm:block" />
             <Button
               variant="outline"
-              className="w-[250px] justify-between font-bold border-2 border-primary"
+              className="min-w-0 flex-1 justify-between font-bold border-2 border-primary sm:w-[250px] sm:flex-none"
               disabled
             >
               Loading...
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
             <div className="flex-1" />
-            <a
-              href="https://github.com/vectorize-io/hindsight"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground"
-            >
-              <Github className="h-5 w-5" />
-              <span className="text-sm font-medium">GitHub</span>
-            </a>
-            <div className="h-8 w-px bg-border" />
             <Button variant="ghost" size="icon" className="h-9 w-9" disabled>
               <Moon className="h-5 w-5" />
             </Button>

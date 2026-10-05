@@ -596,7 +596,7 @@
     "memoryDefenseSecretLeakTitle": "シークレット漏洩防止",
     "memoryDefenseSecretLeakDescription": "保持されたコンテンツのシークレットをスキャンします。一般的なプロバイダーキー、AWS、個人情報をカバーする45パターン。",
     "memoryDefenseEnterpriseTitle": "Memory Defense Enterprise",
-    "memoryDefenseEnterpriseSubtitle": "より多くを検出し、よりスマートに編集し、すべてを監査 — Hindsight Cloudで利用可能。",
+    "memoryDefenseEnterpriseSubtitle": "より多くを検出し、よりスマートに編集し、すべてを監査 — Buddhi Cloudで利用可能。",
     "memoryDefenseEnterpriseFeatureDetectSecrets": "高度なシークレット検出:プロバイダーキー、AWS、GitHub、CIトークンをカバーする200以上のパターン",
     "memoryDefenseEnterpriseFeatureBase64": "Base64デコード:エンコードされたペイロード内の隠されたシークレットを検出",
     "memoryDefenseEnterpriseFeatureLlm": "LLMスクリーニング:正規表現では捉えられない新しいエクスフィルトレーションパターンを検出",
@@ -762,6 +762,9 @@
     "pendingConsolidation": "{count}件のメモリが統合待ち",
     "constellation": "コンステレーション",
     "table": "テーブル",
+    "calendar": "カレンダー 今日",
+    "calendarSelectDay": "日を選択するとその日の記憶が表示されます",
+    "today": "",
     "timeline": "タイムライン",
     "hidePanel": "パネルを非表示",
     "showPanel": "パネルを表示",
@@ -938,6 +941,7 @@
   "entitiesView": {
     "viewRelations": "関係",
     "viewList": "リスト",
+    "viewCards": "カード",
     "loadingEntityGraph": "エンティティグラフを読み込み中...",
     "noCooccurrences": "エンティティの共起がまだありません",
     "noCooccurrencesDescription": "2つのエンティティが同じメモリに現れたとき、共起が発生します。",
@@ -1811,8 +1815,8 @@
     "resumeMotionLabel": "再開"
   },
   "metadata": {
-    "title": "Hindsight Cloud",
-    "description": "Hindsightセマンティックメモリのマルチテナントコントロールプレーン"
+    "title": "Buddhi Cloud",
+    "description": "Buddhiセマンティックメモリのマルチテナントコントロールプレーン"
   },
   "addDocument": {
     "addDocumentButton": "ドキュメントを追加",
@@ -1903,7 +1907,7 @@
   "banksOverview": {
     "title": "メモリバンク",
     "subtitle": "メモリバンクはそれぞれ独立した「脳」です。1 人のユーザー、1 つのエージェントまたはプロジェクトが記憶するすべてを隔離して保管します。バンク間で共有されるものはありません。",
-    "welcomeTitle": "Hindsight へようこそ",
+    "welcomeTitle": "Buddhi へようこそ",
     "welcomeBody": "メモリバンクは独立した「脳」です。1 人のユーザー、1 つのエージェントまたはプロジェクトが記憶するすべてを隔離して保管します。まずは最初のバンクを作成しましょう。",
     "search": "バンクを検索...",
     "noSearchResults": "検索条件に一致するバンクはありません。",
@@ -1931,7 +1935,7 @@
     "bulkDeleteFailures": "これらのバンクは削除できませんでした:"
   },
   "login": {
-    "title": "Hindsight コントロールプレーン",
+    "title": "Buddhi コントロールプレーン",
     "description": "続行するにはアクセスキーを入力してください",
     "accessKey": "アクセスキー",
     "accessKeyPlaceholder": "アクセスキーを入力",

@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import { sanitizeReturnTo, withBasePath } from "@/lib/base-path";
 import Image from "next/image";
 
@@ -56,14 +55,11 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="absolute top-4 right-4">
-        <LanguageSwitcher />
-      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <Image
             src={withBasePath("/logo.png")}
-            alt="Hindsight"
+            alt="Buddhi"
             width={160}
             height={160}
             className="mx-auto"

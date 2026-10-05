@@ -10,6 +10,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  LayoutGrid,
   List,
   ScatterChart,
   Users,
@@ -44,9 +45,24 @@ interface Entity {
 
 type EntityDetail = Entity;
 
-type ViewMode = "relations" | "list";
+type ViewMode = "relations" | "list" | "cards";
 
 const ITEMS_PER_PAGE = 50;
+
+/** Deterministic avatar hue so an entity keeps the same colour across pages. */
+function entityHue(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 360;
+  return h;
+}
+
+/** Cast-card monogram: first letters of the first two words, or two chars for one word. */
+function entityInitials(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return "?";
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
 
 export function EntitiesView() {
   const t = useTranslations("entitiesView");
@@ -264,6 +280,57 @@ export function EntitiesView() {
     return new Date(dateStr).toLocaleDateString();
   };
 
+  // Shared by the list and cards views so paging behaves identically.
+  const paginationControls =
+    totalPages > 1 ? (
+      <div className="flex items-center justify-between mt-3 pt-3 border-t">
+        <div className="text-xs text-muted-foreground">
+          {offset + 1}-{Math.min(offset + ITEMS_PER_PAGE, total)} of {total}
+        </div>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1 || loading}
+            className="h-7 w-7 p-0"
+          >
+            <ChevronsLeft className="h-3 w-3" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || loading}
+            className="h-7 w-7 p-0"
+          >
+            <ChevronLeft className="h-3 w-3" />
+          </Button>
+          <span className="text-xs px-2">
+            {currentPage} / {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages || loading}
+            className="h-7 w-7 p-0"
+          >
+            <ChevronRight className="h-3 w-3" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages || loading}
+            className="h-7 w-7 p-0"
+          >
+            <ChevronsRight className="h-3 w-3" />
+          </Button>
+        </div>
+      </div>
+    ) : null;
+
   return (
     <div>
       {/* Tag filter + view mode toggle (same segmented control as memories page) */}
@@ -298,6 +365,17 @@ export function EntitiesView() {
           >
             <List className="w-4 h-4" />
             {t("viewList")}
+          </button>
+          <button
+            onClick={() => setViewMode("cards")}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
+              viewMode === "cards"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <LayoutGrid className="w-4 h-4" />
+            {t("viewCards")}
           </button>
         </div>
       </div>
@@ -396,54 +474,95 @@ export function EntitiesView() {
               </div>
 
               {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between mt-3 pt-3 border-t">
-                  <div className="text-xs text-muted-foreground">
-                    {offset + 1}-{Math.min(offset + ITEMS_PER_PAGE, total)} of {total}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(1)}
-                      disabled={currentPage === 1 || loading}
-                      className="h-7 w-7 p-0"
-                    >
-                      <ChevronsLeft className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1 || loading}
-                      className="h-7 w-7 p-0"
-                    >
-                      <ChevronLeft className="h-3 w-3" />
-                    </Button>
-                    <span className="text-xs px-2">
-                      {currentPage} / {totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages || loading}
-                      className="h-7 w-7 p-0"
-                    >
-                      <ChevronRight className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(totalPages)}
-                      disabled={currentPage === totalPages || loading}
-                      className="h-7 w-7 p-0"
-                    >
-                      <ChevronsRight className="h-3 w-3" />
-                    </Button>
-                  </div>
+              {paginationControls}
+            </>
+          ) : (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <Users className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
+                <div className="text-sm text-muted-foreground">{t("noEntitiesFound")}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {t("noEntitiesDescription")}
                 </div>
-              )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Entity Cards - cast-board grid */}
+      {viewMode === "cards" && (
+        <div>
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <Spinner size="xl" variant="jump" className="mx-auto mb-2" />
+                <div className="text-sm text-muted-foreground">{t("loadingEntities")}</div>
+              </div>
+            </div>
+          ) : entities.length > 0 ? (
+            <>
+              <div className="mb-4 text-sm text-muted-foreground">
+                {t("entityCount", { count: total })}
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                {entities.map((entity) => {
+                  const hue = entityHue(entity.id);
+                  const selected = selectedEntity?.id === entity.id;
+                  return (
+                    <div
+                      key={entity.id}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => loadEntityDetail(entity.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          loadEntityDetail(entity.id);
+                        }
+                      }}
+                      className={`group flex cursor-pointer flex-col items-center rounded-xl border bg-card p-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                        selected ? "border-primary ring-2 ring-primary/40" : "border-border"
+                      }`}
+                    >
+                      <div
+                        className="flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-white shadow-inner"
+                        style={{
+                          background: `linear-gradient(135deg, hsl(${hue} 72% 48%), hsl(${
+                            (hue + 45) % 360
+                          } 72% 34%))`,
+                        }}
+                      >
+                        {entityInitials(entity.canonical_name)}
+                      </div>
+                      <div
+                        className="mt-3 w-full truncate text-sm font-semibold text-card-foreground"
+                        title={entity.canonical_name}
+                      >
+                        {entity.canonical_name}
+                      </div>
+                      <div className="mt-1.5 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                        {entity.mention_count} · {t("colMentions")}
+                      </div>
+                      <div className="mt-4 grid w-full grid-cols-2 gap-2 border-t border-border pt-3 text-[10px] text-muted-foreground">
+                        <div>
+                          <div className="uppercase tracking-wide">{t("colFirstSeen")}</div>
+                          <div className="mt-0.5 text-foreground/80">
+                            {formatDate(entity.first_seen)}
+                          </div>
+                        </div>
+                        <div className="border-l border-border">
+                          <div className="uppercase tracking-wide">{t("colLastSeen")}</div>
+                          <div className="mt-0.5 text-foreground/80">
+                            {formatDate(entity.last_seen)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {paginationControls}
             </>
           ) : (
             <div className="flex items-center justify-center py-20">

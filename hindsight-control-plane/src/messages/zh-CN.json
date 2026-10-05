@@ -596,7 +596,7 @@
     "memoryDefenseSecretLeakTitle": "密钥泄露防护",
     "memoryDefenseSecretLeakDescription": "扫描保留内容中的密钥。45 种模式,涵盖常见提供商密钥、AWS 和个人信息。",
     "memoryDefenseEnterpriseTitle": "Memory Defense Enterprise",
-    "memoryDefenseEnterpriseSubtitle": "检测更多、智能编辑、全面审计 — Hindsight Cloud 中提供。",
+    "memoryDefenseEnterpriseSubtitle": "检测更多、智能编辑、全面审计 — Buddhi Cloud 中提供。",
     "memoryDefenseEnterpriseFeatureDetectSecrets": "高级密钥检测:200+ 模式,涵盖提供商密钥、AWS、GitHub 和 CI 令牌",
     "memoryDefenseEnterpriseFeatureBase64": "Base64 解码:捕获编码负载中隐藏的密钥",
     "memoryDefenseEnterpriseFeatureLlm": "LLM 筛查:捕获正则表达式无法识别的新型外泄模式",
@@ -762,6 +762,9 @@
     "pendingConsolidation": "{count} 条记忆待整合",
     "constellation": "星座图",
     "table": "表格",
+    "calendar": "日历 今天",
+    "calendarSelectDay": "选择某一天即可查看当天的记忆",
+    "today": "",
     "timeline": "时间线",
     "hidePanel": "隐藏面板",
     "showPanel": "显示面板",
@@ -938,6 +941,7 @@
   "entitiesView": {
     "viewRelations": "关系",
     "viewList": "列表",
+    "viewCards": "卡片",
     "loadingEntityGraph": "正在加载实体图...",
     "noCooccurrences": "还没有实体共现",
     "noCooccurrencesDescription": "两个实体出现在同一条记忆中时，会形成一次共现。",
@@ -1811,8 +1815,8 @@
     "resumeMotionLabel": "继续"
   },
   "metadata": {
-    "title": "Hindsight Cloud",
-    "description": "Hindsight 语义记忆的多租户控制面板"
+    "title": "Buddhi Cloud",
+    "description": "Buddhi 语义记忆的多租户控制面板"
   },
   "addDocument": {
     "addDocumentButton": "添加文档",
@@ -1903,7 +1907,7 @@
   "banksOverview": {
     "title": "记忆库",
     "subtitle": "每个记忆库都是一个独立的大脑——隔离存储某个用户、智能体或项目记住的一切。记忆库之间不共享任何内容。",
-    "welcomeTitle": "欢迎使用 Hindsight",
+    "welcomeTitle": "欢迎使用 Buddhi",
     "welcomeBody": "记忆库是一个独立的大脑——隔离存储某个用户、智能体或项目记住的一切。创建第一个记忆库开始使用。",
     "search": "搜索记忆库...",
     "noSearchResults": "没有与搜索匹配的记忆库。",
@@ -1931,7 +1935,7 @@
     "bulkDeleteFailures": "以下记忆库无法删除："
   },
   "login": {
-    "title": "Hindsight 控制面板",
+    "title": "Buddhi 控制面板",
     "description": "输入访问密钥以继续",
     "accessKey": "访问密钥",
     "accessKeyPlaceholder": "输入访问密钥",

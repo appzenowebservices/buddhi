@@ -85,6 +85,7 @@ export function BanksOverview() {
   const t = useTranslations("banksOverview");
   const tCommon = useTranslations("common");
   const tNavBank = useTranslations("nav.bank");
+  const tAddDocument = useTranslations("addDocument");
   const router = useRouter();
   // The overview pages discretely while the header selector scrolls infinitely, so it
   // cannot share the selector's cumulative list — it fetches its own page. `loadBanks`
@@ -102,6 +103,9 @@ export function BanksOverview() {
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [confirmText, setConfirmText] = React.useState("");
   const [progress, setProgress] = React.useState<DeleteProgress | null>(null);
+  const [newBankId, setNewBankId] = React.useState("");
+  const [isCreating, setIsCreating] = React.useState(false);
+  const [createError, setCreateError] = React.useState<string | null>(null);
 
   // Search runs server-side (the list is paginated), so the input holds a draft that is
   // debounced into a query. A new query always restarts at page 1.
@@ -218,6 +222,25 @@ export function BanksOverview() {
     router.push(bankRoute(bankId));
   };
 
+  // The welcome screen creates the first bank inline, so the modal (with its template
+  // import) stays a power-user path reachable from the header.
+  const handleCreateFirstBank = async () => {
+    const bankId = newBankId.trim();
+    if (!bankId || isCreating) return;
+    setIsCreating(true);
+    setCreateError(null);
+    try {
+      await client.createBank(bankId);
+      await loadBanks();
+      setCurrentBank(bankId);
+      router.push(bankRoute(bankId, "?view=data"));
+    } catch (error) {
+      setCreateError(error instanceof Error ? error.message : tAddDocument("failedToCreateBank"));
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   const confirmWord = t("bulkDeleteConfirmWord");
   const confirmed = confirmText.trim().toLowerCase() === confirmWord.toLowerCase();
 
@@ -226,16 +249,54 @@ export function BanksOverview() {
   // A search that matches nothing still shows the table UI, so the query can be edited.
   if (!loading && total === 0 && !search) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-80px)] bg-muted/20">
-        <div className="max-w-md rounded-lg border-2 border-border bg-card p-10 text-center shadow-lg">
-          {/* Tumbling Hindsight mascot — loops forever as a friendly greeting. */}
-          <Spinner size="xl" variant="jump" className="mx-auto mb-4" />
-          <h3 className="mb-3 text-2xl font-bold text-card-foreground">{t("welcomeTitle")}</h3>
-          <p className="mb-6 text-muted-foreground">{t("welcomeBody")}</p>
-          <Button onClick={() => window.dispatchEvent(new CustomEvent("hindsight:create-bank"))}>
-            <Plus className="mr-1.5 h-4 w-4" />
-            {tNavBank("create")}
-          </Button>
+      <div className="flex items-center justify-center min-h-[calc(100vh-80px)] bg-muted/20 px-4 py-8 sm:px-6 sm:py-10">
+        <div className="grid w-full max-w-4xl overflow-hidden rounded-xl border-2 border-border bg-card shadow-lg md:grid-cols-2">
+          {/* Brand column: the tumbling mascot and what a bank is. */}
+          <div className="flex flex-col items-center justify-center gap-3 border-b border-border bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-8 text-center sm:gap-4 sm:p-10 md:border-b-0 md:border-r">
+            <Spinner size="xl" variant="jump" />
+            <div className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Buddhi
+            </div>
+            <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
+              {t("subtitle")}
+            </p>
+          </div>
+
+          {/* Action column: welcome copy and the first bank, created inline. */}
+          <div className="flex flex-col items-center justify-center p-8 text-center sm:p-10">
+            <h3 className="mb-2 text-xl font-bold text-card-foreground sm:mb-3 sm:text-2xl">
+              {t("welcomeTitle")}
+            </h3>
+            <p className="mb-5 text-sm text-muted-foreground sm:mb-6 sm:text-base">
+              {t("welcomeBody")}
+            </p>
+            <form
+              className="flex w-full max-w-sm flex-col gap-2 sm:flex-row"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCreateFirstBank();
+              }}
+            >
+              <Input
+                placeholder={tAddDocument("createBankIdPlaceholder")}
+                value={newBankId}
+                onChange={(e) => {
+                  setNewBankId(e.target.value);
+                  setCreateError(null);
+                }}
+                disabled={isCreating}
+                autoFocus
+              />
+              <Button
+                type="submit"
+                className="w-full sm:w-auto"
+                disabled={isCreating || !newBankId.trim()}
+              >
+                {isCreating ? tAddDocument("creating") : tCommon("create")}
+              </Button>
+            </form>
+            {createError && <p className="mt-3 text-sm text-destructive">{createError}</p>}
+          </div>
         </div>
       </div>
     );

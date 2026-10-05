@@ -596,7 +596,7 @@
     "memoryDefenseSecretLeakTitle": "시크릿 유출 방지",
     "memoryDefenseSecretLeakDescription": "보존된 콘텐츠에서 시크릿을 검사합니다. 일반적인 공급자 키, AWS, 개인 정보를 포함하는 45개 패턴.",
     "memoryDefenseEnterpriseTitle": "Memory Defense Enterprise",
-    "memoryDefenseEnterpriseSubtitle": "더 많이 감지하고, 더 똑똑하게 편집하며, 모든 것을 감사하세요 — Hindsight Cloud에서 사용 가능.",
+    "memoryDefenseEnterpriseSubtitle": "더 많이 감지하고, 더 똑똑하게 편집하며, 모든 것을 감사하세요 — Buddhi Cloud에서 사용 가능.",
     "memoryDefenseEnterpriseFeatureDetectSecrets": "고급 시크릿 감지: 공급자 키, AWS, GitHub, CI 토큰을 포함하는 200개 이상의 패턴",
     "memoryDefenseEnterpriseFeatureBase64": "Base64 디코딩: 인코딩된 페이로드 안에 숨겨진 시크릿 감지",
     "memoryDefenseEnterpriseFeatureLlm": "LLM 스크리닝: 정규식으로 잡을 수 없는 새로운 유출 패턴 감지",
@@ -762,6 +762,9 @@
     "pendingConsolidation": "{count}개 메모리 통합 대기 중",
     "constellation": "별자리",
     "table": "표",
+    "calendar": "캘린더 오늘",
+    "calendarSelectDay": "날짜를 선택하면 해당 날짜의 기억이 표시됩니다",
+    "today": "",
     "timeline": "타임라인",
     "hidePanel": "패널 숨기기",
     "showPanel": "패널 표시",
@@ -938,6 +941,7 @@
   "entitiesView": {
     "viewRelations": "관계",
     "viewList": "목록",
+    "viewCards": "카드",
     "loadingEntityGraph": "엔티티 그래프 불러오는 중...",
     "noCooccurrences": "아직 엔티티 공동 발생 없음",
     "noCooccurrencesDescription": "두 엔티티가 동일한 메모리에 나타날 때 공동 발생합니다.",
@@ -1811,8 +1815,8 @@
     "resumeMotionLabel": "재생"
   },
   "metadata": {
-    "title": "Hindsight Cloud",
-    "description": "Hindsight 시맨틱 메모리를 위한 멀티테넌트 컨트롤 플레인"
+    "title": "Buddhi Cloud",
+    "description": "Buddhi 시맨틱 메모리를 위한 멀티테넌트 컨트롤 플레인"
   },
   "addDocument": {
     "addDocumentButton": "문서 추가",
@@ -1903,7 +1907,7 @@
   "banksOverview": {
     "title": "메모리 뱅크",
     "subtitle": "각 메모리 뱅크는 별개의 뇌입니다. 한 사용자, 에이전트 또는 프로젝트가 기억하는 모든 것을 격리해 저장하며, 뱅크 간에는 아무것도 공유되지 않습니다.",
-    "welcomeTitle": "Hindsight에 오신 것을 환영합니다",
+    "welcomeTitle": "Buddhi에 오신 것을 환영합니다",
     "welcomeBody": "메모리 뱅크는 별개의 뇌입니다. 한 사용자, 에이전트 또는 프로젝트가 기억하는 모든 것을 격리해 저장합니다. 첫 번째 뱅크를 만들어 시작해 보세요.",
     "search": "뱅크 검색...",
     "noSearchResults": "검색과 일치하는 뱅크가 없습니다.",
@@ -1931,7 +1935,7 @@
     "bulkDeleteFailures": "다음 뱅크는 삭제하지 못했습니다:"
   },
   "login": {
-    "title": "Hindsight 제어 플레인",
+    "title": "Buddhi 제어 플레인",
     "description": "계속하려면 액세스 키를 입력하세요",
     "accessKey": "액세스 키",
     "accessKeyPlaceholder": "액세스 키 입력",

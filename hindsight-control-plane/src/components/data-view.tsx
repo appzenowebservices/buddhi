@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Calendar,
+  CalendarDays,
+  History,
   ZoomIn,
   ZoomOut,
   ChevronLeft,
@@ -54,7 +56,7 @@ import { ObservationScopeFilter, ObservationScope } from "./observation-scope-fi
 import { ScatterChart, Plus, FileText } from "lucide-react";
 
 type FactType = "world" | "experience" | "observation";
-type ViewMode = "table" | "timeline" | "constellation";
+type ViewMode = "table" | "timeline" | "calendar" | "constellation";
 
 // Categorical palette for coloring observation scopes (exact tag sets) when
 // "Group by scope" clusters the constellation. Distinct, reasonably separable hues.
@@ -725,8 +727,19 @@ export function DataView({
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <Calendar className="w-4 h-4" />
+                  <History className="w-4 h-4" />
                   {t("timeline")}
+                </button>
+                <button
+                  onClick={() => setViewMode("calendar")}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
+                    viewMode === "calendar"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <CalendarDays className="w-4 h-4" />
+                  {t("calendar")}
                 </button>
               </div>
             </div>
@@ -1079,6 +1092,13 @@ export function DataView({
               data={data}
               filteredRows={filteredTableRows}
               bankId={currentBank || undefined}
+              onMemoryClick={(id) => setModalMemoryId(id)}
+            />
+          )}
+
+          {!compactMode && viewMode === "calendar" && (
+            <CalendarView
+              filteredRows={filteredTableRows}
               onMemoryClick={(id) => setModalMemoryId(id)}
             />
           )}
@@ -1455,6 +1475,304 @@ export function TimelineView({
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Calendar View - month grid of dated memories. Shares the TimelineView data
+// contract: it renders purely from `filteredRows` and only shows memories with
+// an occurred_start date, so the same filters drive every view.
+// ---------------------------------------------------------------------------
+
+/** Local (not UTC) YYYY-MM-DD key, so a memory lands on the day the user sees. */
+function dayKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate()
+  ).padStart(2, "0")}`;
+}
+
+/** Subtle fact-type tint for day chips; unknown types fall back to a neutral chip. */
+const CALENDAR_TYPE_CHIP: Record<string, string> = {
+  world: "bg-sky-500/15 hover:bg-sky-500/25",
+  experience: "bg-emerald-500/15 hover:bg-emerald-500/25",
+  observation: "bg-violet-500/15 hover:bg-violet-500/25",
+};
+
+function CalendarView({
+  filteredRows,
+  onMemoryClick,
+}: {
+  filteredRows: any[];
+  onMemoryClick: (id: string) => void;
+}) {
+  const t = useTranslations("dataView");
+  const locale = useLocale();
+
+  const { byDay, datedItems, withoutDates } = useMemo(() => {
+    const map: Record<string, any[]> = {};
+    const dated: any[] = [];
+    const undated: any[] = [];
+    (filteredRows || []).forEach((row: any) => {
+      if (!row.occurred_start) {
+        undated.push(row);
+        return;
+      }
+      const key = dayKey(new Date(row.occurred_start));
+      if (!map[key]) map[key] = [];
+      map[key].push(row);
+      dated.push(row);
+    });
+    dated.sort(
+      (a, b) => new Date(a.occurred_start).getTime() - new Date(b.occurred_start).getTime()
+    );
+    return { byDay: map, datedItems: dated, withoutDates: undated };
+  }, [filteredRows]);
+
+  // Open on the month of the most recent memory so the view is never blank on
+  // arrival; the Today button brings the user back to the current month.
+  const [cursor, setCursor] = useState<Date>(() => {
+    const base = datedItems.length
+      ? new Date(datedItems[datedItems.length - 1].occurred_start)
+      : new Date();
+    return new Date(base.getFullYear(), base.getMonth(), 1);
+  });
+  const [selectedDay, setSelectedDay] = useState<string | null>(() =>
+    datedItems.length ? dayKey(new Date(datedItems[datedItems.length - 1].occurred_start)) : null
+  );
+
+  const gridStart = useMemo(() => {
+    const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+    return new Date(first.getFullYear(), first.getMonth(), 1 - first.getDay());
+  }, [cursor]);
+
+  const days = useMemo(
+    () =>
+      Array.from({ length: 42 }, (_, i) => {
+        const d = new Date(gridStart);
+        d.setDate(gridStart.getDate() + i);
+        return d;
+      }),
+    [gridStart]
+  );
+
+  const weekdays = useMemo(() => {
+    const base = new Date(2024, 0, 7); // a Sunday
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      return d.toLocaleDateString(locale, { weekday: "short" });
+    });
+  }, [locale]);
+
+  const shiftMonth = (delta: number) =>
+    setCursor((c) => new Date(c.getFullYear(), c.getMonth() + delta, 1));
+
+  const goToday = () => {
+    const now = new Date();
+    setCursor(new Date(now.getFullYear(), now.getMonth(), 1));
+    setSelectedDay(dayKey(now));
+  };
+
+  if (datedItems.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <CalendarDays className="w-12 h-12 text-muted-foreground mb-3" />
+        <div className="text-base font-medium text-foreground mb-1">{t("noTimelineData")}</div>
+        <div className="text-xs text-muted-foreground text-center max-w-md">
+          {t("noTimelineDataDescription")}
+          {withoutDates.length > 0 && (
+            <span className="block mt-1">
+              {t("memoriesWithoutDatesInTable", { count: withoutDates.length })}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  const todayKey = dayKey(new Date());
+  const selectedItems = selectedDay ? byDay[selectedDay] || [] : [];
+
+  return (
+    <div className="px-4">
+      {/* Controls */}
+      <div className="flex flex-wrap items-center justify-between mb-3 gap-3">
+        <div className="text-xs text-muted-foreground">
+          <span>{t("timelineMemoriesCount", { count: datedItems.length })}</span>
+          {withoutDates.length > 0 &&
+            ` ${t("timelineWithoutDates", { count: withoutDates.length })}`}
+        </div>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => shiftMonth(-1)}
+            className="h-7 w-7 p-0"
+            title={t("previous")}
+          >
+            <ChevronLeft className="h-3 w-3" />
+          </Button>
+          <span className="text-xs px-2 min-w-[140px] text-center font-medium text-foreground">
+            {cursor.toLocaleDateString(locale, { month: "long", year: "numeric" })}
+          </span>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => shiftMonth(1)}
+            className="h-7 w-7 p-0"
+            title={t("next")}
+          >
+            <ChevronRight className="h-3 w-3" />
+          </Button>
+          <Button variant="secondary" size="sm" onClick={goToday} className="h-7 px-2 text-[11px]">
+            {t("today")}
+          </Button>
+        </div>
+      </div>
+
+      {/* Two columns on desktop: month grid + day detail (stacks on mobile). */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_380px]">
+        {/* Month grid */}
+        <div className="overflow-x-auto">
+          <div className="min-w-[640px] rounded-lg border border-border overflow-hidden">
+            <div className="grid grid-cols-7 bg-muted/40">
+              {weekdays.map((w, i) => (
+                <div
+                  key={i}
+                  className="px-2 py-1.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground text-center border-b border-border"
+                >
+                  {w}
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7">
+              {days.map((d) => {
+                const key = dayKey(d);
+                const items = byDay[key] || [];
+                const inMonth = d.getMonth() === cursor.getMonth();
+                const isToday = key === todayKey;
+                const isSelected = key === selectedDay;
+                return (
+                  <div
+                    key={key}
+                    onClick={() => setSelectedDay(items.length ? key : null)}
+                    className={`min-h-[110px] border-b border-r border-border p-1.5 align-top ${
+                      inMonth ? "bg-background" : "bg-muted/20"
+                    } ${items.length ? "cursor-pointer" : ""} ${
+                      isSelected ? "ring-1 ring-inset ring-primary/60" : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span
+                        className={`text-[11px] leading-none ${
+                          inMonth ? "text-foreground" : "text-muted-foreground/60"
+                        } ${
+                          isToday
+                            ? "bg-primary text-primary-foreground rounded-full px-1.5 py-0.5 font-semibold"
+                            : ""
+                        }`}
+                      >
+                        {d.getDate()}
+                      </span>
+                      {items.length > 0 && (
+                        <span className="text-[9px] text-muted-foreground">{items.length}</span>
+                      )}
+                    </div>
+                    <div className="space-y-0.5">
+                      {items.slice(0, 3).map((item: any) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onMemoryClick(item.id);
+                          }}
+                          title={item.text}
+                          className={`w-full text-left text-[10px] leading-tight truncate rounded px-1 py-0.5 transition-colors ${
+                            CALENDAR_TYPE_CHIP[item.fact_type] || "bg-muted hover:bg-muted/70"
+                          }`}
+                        >
+                          {item.text}
+                        </button>
+                      ))}
+                      {items.length > 3 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedDay(key);
+                          }}
+                          className="w-full text-left text-[9px] text-muted-foreground hover:text-foreground px-1"
+                        >
+                          +{items.length - 3} {t("timelineItems")}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Day detail — sticky sidebar on desktop, stacked below the grid on mobile */}
+        <div className="lg:sticky lg:top-4 lg:self-start">
+          <div className="rounded-lg border border-border bg-card">
+            {selectedDay && selectedItems.length > 0 ? (
+              <>
+                <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+                  <span className="text-sm font-medium text-foreground">
+                    {new Date(`${selectedDay}T00:00:00`).toLocaleDateString(locale, {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {selectedItems.length}{" "}
+                    {selectedItems.length === 1 ? t("timelineItem") : t("timelineItems")}
+                  </span>
+                </div>
+                <div className="p-2 space-y-1 max-h-[380px] overflow-y-auto lg:max-h-[560px]">
+                  {selectedItems.map((item: any) => (
+                    <div
+                      key={item.id}
+                      onClick={() => onMemoryClick(item.id)}
+                      className="cursor-pointer rounded border border-border bg-background p-2 hover:border-primary/50 transition-colors"
+                    >
+                      <p className="text-xs text-foreground line-clamp-2 leading-relaxed">
+                        {item.text}
+                      </p>
+                      {item.context && (
+                        <p className="text-[10px] text-muted-foreground mt-1 truncate">
+                          {item.context}
+                        </p>
+                      )}
+                      {item.entities && (
+                        <div className="flex gap-1 mt-1 flex-wrap">
+                          {item.entities
+                            .split(", ")
+                            .slice(0, 3)
+                            .map((entity: string, i: number) => (
+                              <EntityChip key={i} entity={entity} size="xs" />
+                            ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
+                <CalendarDays className="w-8 h-8 text-muted-foreground/50 mb-2" />
+                <p className="text-xs text-muted-foreground">{t("calendarSelectDay")}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
