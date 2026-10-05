@@ -28,6 +28,14 @@ print_warn() {
 
 print_info "Generating Hindsight documentation skill..."
 
+# Preflight: this script wipes $SKILL_DIR before regenerating, and the whole
+# pipeline runs on python3. Bail out before the wipe if python3 is missing, or
+# a Windows dev box without Python loses the committed skill on every run.
+if ! command -v python3 >/dev/null 2>&1 || ! python3 --version >/dev/null 2>&1; then
+    print_warn "python3 not found; leaving skills/hindsight-docs untouched (CI verifies the generated files)."
+    exit 0
+fi
+
 # Clean and recreate skill directory
 rm -rf "$SKILL_DIR"
 mkdir -p "$REFS_DIR"
